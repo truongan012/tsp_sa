@@ -27,7 +27,7 @@ namespace tsp_sa
         {
             try
             {
-                using (StreamReader sr = new StreamReader("..\\..\\Lib\\eil8.tsp"))
+                using (StreamReader sr = new StreamReader("..\\..\\Lib\\eil51.tsp"))
                 {
                     //Get the number of the cities
                     string line;

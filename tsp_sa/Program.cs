@@ -12,10 +12,11 @@ namespace tsp_sa
         static void Main(string[] args)
         {
             TSP tsp = new TSP();
-            SA sa = new SA(tsp);
             tsp.GetCitiesInfo();
+
+            SA sa = new SA(tsp);
             sa.Execute();
-            sa.Display();
+
             ReadKey();
 
         }

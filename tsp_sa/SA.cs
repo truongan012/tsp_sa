@@ -11,133 +11,148 @@ namespace tsp_sa
     class SA
     {
         private const double FinalTemperature = 0.000001f;
+        private const double ReductionFactor = 0.99f;
 
         TSP tsp;
         private int maxSwaps;
         private int maxInterations;
-        private ArrayList path = new ArrayList();
-        private int costTotal;
+        private int[] path;
+        private int[] finalPath;
 
 
         public SA(TSP temp)
         {
             tsp = temp;
-            maxSwaps = temp.CitiesNum * 100;
+            maxSwaps = temp.CitiesNum * 10;
             maxInterations = temp.CitiesNum * 10;
-            costTotal = 0;
+            path = new int[temp.CitiesNum];
+            finalPath = new int[temp.CitiesNum];
         }
 
         public void Execute()
         {
             double temperature = InitialTemperature();
+            Display(path);
+            int bestCost = GetCost(path);
+            do
+            {
+                for (int i = 0; i < maxSwaps; i++)
+                {
+                    int nodeA, nodeB;
+                    RandomNodes(out nodeA, out nodeB);
+                    double energyDifference = CalcEnergyDifference(nodeA, nodeB);
 
-            //do
-            //{
-            //    int interation = 0;
-            //    for (int i = 0; i < maxSwaps; i++)
-            //    {
-            //        int nodeA, nodeB;
-            //        RandomNodes(out nodeA, out nodeB);
-            //        double energyDifference = CalcEnergyDifference(nodeA, nodeB);
-
-            //        if (Oracle(energyDifference, temperature))
-            //        {
-            //            Swap(nodeA, nodeB);
-            //            SaveSolution();
-            //            interation++;
-            //        }
-            //        if (interation < maxInterations)
-            //        {
-            //            break;
-            //        }
-            //    }
-            //    temperature = ReduceTemperature();
-            //} while (temperature < FinalTemperature);
-
+                    if (Oracle(energyDifference, temperature))
+                    {
+                        Swap(nodeA, nodeB);
+                        if (GetCost(path) < bestCost)
+                        {
+                            path.CopyTo(finalPath, 0);
+                            bestCost = GetCost(finalPath);
+                        }
+                    }
+                }
+                temperature = ReductionFactor * temperature;
+            } while (temperature < FinalTemperature);
+            Display(finalPath);
         }
 
         private double CalcEnergyDifference(int nodeA, int nodeB)
         {
             return (tsp.GetDistance(nodeA, nodeB) + tsp.GetDistance(nodeA + 1, nodeB + 1)
-                - tsp.GetDistance(nodeA, nodeA + 1) + tsp.GetDistance(nodeB, nodeB + 1));
+              - tsp.GetDistance(nodeA, nodeA + 1) + tsp.GetDistance(nodeB, nodeB + 1));
+
         }
 
         private void RandomNodes(out int nodeA, out int nodeB)
         {
-            throw new NotImplementedException();
+            nodeA = (int)(0.5f + new Random().NextDouble() * (tsp.CitiesNum - 1));
+            nodeA = nodeA < tsp.CitiesNum - 1 ? nodeA : nodeA - 1;
+            do
+            {
+                nodeB = (int)(0.5f + new Random().NextDouble() * (tsp.CitiesNum - 1));
+                nodeB = nodeB < tsp.CitiesNum - 1 ? nodeB : nodeB - 1;
+            } while ((nodeA - nodeB + tsp.CitiesNum) % tsp.CitiesNum < 2);
         }
 
         private double InitialTemperature()
         {
-            return InitialSolution() / 10;
+            InitialSolution();
+            return GetCost(path) / 20;
         }
 
-        private int InitialSolution()
+        private void InitialSolution()
         {
-            int[] tempPath = new int[tsp.CitiesNum];
-            for (int i = 0; i < tsp.CitiesNum; i++)
-            {
-                tempPath[i] = i;
-            }
-
-            new Random().Shuffle(tempPath);
-
-            for (int i = 0; i < tsp.CitiesNum; i++)
-            {
-                int temp = tempPath[i];
-                path.Add(temp);
-            }
-
-            for (int i = 0; i < path.Count; i++)
-            {
-                if (i == path.Count - 1)
-                {
-                    costTotal += tsp.GetDistance(i, 0);
-                }
-                else
-                {
-                    costTotal += tsp.GetDistance(i, i + 1);
-                }
-            }
-
-            return costTotal;
+            //for (int i = 0; i < tsp.CitiesNum; i++)
+            //{
+            //    path[i] = i;
+            //    int bestDistance = tsp.GetDistance(i, i + 1);
+            //    for (int j = i + 1; j < tsp.CitiesNum; j++)
+            //    {
+            //        if (tsp.GetDistance(i, j) < bestDistance)
+            //        {
+            //            bestDistance = tsp.GetDistance(i, j);
+            //        }
+            //    }
+            //}
         }
 
         private void Swap(int nodeA, int nodeB)
         {
-            throw new NotImplementedException();
+            int tmp;
+            if (nodeA > nodeB)
+            {
+                tmp = nodeA;
+                nodeA = nodeB;
+                nodeB = tmp;
+            }
+            while (nodeB > nodeA)
+            {
+                tmp = path[nodeA + 1];
+                path[nodeA + 1] = path[nodeB];
+                path[nodeB] = tmp;
+                nodeB--;
+                nodeA++;
+            }
         }
 
         private bool Oracle(double energyDifference, double temperature)
         {
-            throw new NotImplementedException();
+            return (energyDifference < 0) || (new Random().NextDouble() < Math.Exp(-energyDifference / temperature));
         }
 
-        private double ReduceTemperature()
+        public void Display(int[] path)
         {
-            throw new NotImplementedException();
-        }
+            WriteLine($"Total Cost: {GetCost(path)} ");
 
-        private void SaveSolution()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Display()
-        {
-            WriteLine($"Total Cost: {costTotal} ");
-
-            for (int i = 0; i < path.Count; i++)
+            for (int i = 0; i < path.Length; i++)
             {
-                if (i == path.Count - 1)
+                if (i == path.Length - 1)
                 {
-                    WriteLine($"{path.IndexOf(i)} -> {path.IndexOf(0)}");
+                    WriteLine($"{path[i]} -> {path[0]}");
                 }
                 else
                 {
-                    Write($"{path.IndexOf(i)} -> ");
+                    Write($"{path[i]} -> ");
                 }
             }
+        }
+
+        public int GetCost(int[] path)
+        {
+            int costTotal = 0;
+            for (int i = 0; i < path.Length; i++)
+            {
+                if (i == path.Length - 1)
+                {
+                    costTotal += tsp.GetDistance(path[i], path[0]);
+                }
+                else
+                {
+                    costTotal += tsp.GetDistance(path[i], path[i + 1]);
+                }
+            }
+            return costTotal;
         }
     }
 }
