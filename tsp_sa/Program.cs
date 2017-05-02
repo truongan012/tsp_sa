@@ -12,7 +12,7 @@ namespace tsp_sa
         static void Main(string[] args)
         {
             TSP tsp = new TSP();
-            tsp.ReadCities();
+            tsp.GetCitiesInfo();
 
             ReadKey();
 

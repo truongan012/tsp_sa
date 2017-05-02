@@ -12,18 +12,47 @@ namespace tsp_sa
     class TSP
     {
         int citiesNum;
-        ArrayList citiesMat = new ArrayList();
+        ArrayList citiesWeightMat = new ArrayList();
 
-        public void ReadCities()
+        public void GetCitiesInfo()
         {
             try
             {
                 using (StreamReader sr = new StreamReader("..\\..\\Lib\\eil8.tsp"))
                 {
+                    //Get the number of the cities
                     string line;
-                    while ((line = sr.ReadLine()) == "EOF")
+                    while (!(line = sr.ReadLine()).Equals("NODE_COORD_SECTION"))
                     {
-                        WriteLine(line);
+                        if (line.Contains("DIMENSION"))
+                        {
+                            int index = line.LastIndexOf(" ") + 1;
+                            citiesNum = Convert.ToInt32(line.Substring(index, line.Length - index));
+                        }
+                    }
+
+                    //Get the x, y cordinate of each city
+                    double[] xCord = new double[citiesNum];
+                    double[] yCord = new double[citiesNum];
+                    int nodeId = 0;
+                    while (!(line = sr.ReadLine()).Equals("EOF"))
+                    {
+                        string[] temp = line.Split(' ');
+                        xCord[nodeId] = Convert.ToDouble(temp[1].Trim());
+                        yCord[nodeId] = Convert.ToDouble(temp[2].Trim());
+                        nodeId++;
+                    }
+
+                    //Calculate the distance between each city
+                    for (int i = 0; i < citiesNum; i++)
+                    {
+                        for (int j = i + 1; j < citiesNum; j++)
+                        {
+                            double xDis = xCord[i] - xCord[j];
+                            double yDis = yCord[i] - yCord[j];
+                            int distance = (int)(0.5f + Math.Sqrt(xDis * xDis + yDis * yDis));
+                            citiesWeightMat.Add(distance);
+                        }
                     }
                 }
             }
@@ -33,13 +62,18 @@ namespace tsp_sa
             }
         }
 
-        public int GetIndex(int i, int j)
+        private int GetIndex(int i, int j)
         {
             if (i > j)
             {
                 return citiesNum * j + i - (j + 1) * j / 2 - j - 1;
             }
             return citiesNum * i + j - (i + 1) * i / 2 - i - 1;
+        }
+
+        public int GetEdgeWeight(int i, int j)
+        {
+            return (int)citiesWeightMat[GetIndex(i,j)];
         }
     }
 }
