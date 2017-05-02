@@ -12,7 +12,16 @@ namespace tsp_sa
     class TSP
     {
         int citiesNum;
-        ArrayList citiesWeightMat = new ArrayList();
+        ArrayList citiesDistanceMat = new ArrayList();
+
+        public int CitiesNum
+        {
+            get
+            {
+                return citiesNum;
+            }
+
+        }
 
         public void GetCitiesInfo()
         {
@@ -32,8 +41,8 @@ namespace tsp_sa
                     }
 
                     //Get the x, y cordinate of each city
-                    double[] xCord = new double[citiesNum];
-                    double[] yCord = new double[citiesNum];
+                    double[] xCord = new double[CitiesNum];
+                    double[] yCord = new double[CitiesNum];
                     int nodeId = 0;
                     while (!(line = sr.ReadLine()).Equals("EOF"))
                     {
@@ -44,14 +53,14 @@ namespace tsp_sa
                     }
 
                     //Calculate the distance between each city
-                    for (int i = 0; i < citiesNum; i++)
+                    for (int i = 0; i < CitiesNum; i++)
                     {
-                        for (int j = i + 1; j < citiesNum; j++)
+                        for (int j = i + 1; j < CitiesNum; j++)
                         {
                             double xDis = xCord[i] - xCord[j];
                             double yDis = yCord[i] - yCord[j];
                             int distance = (int)(0.5f + Math.Sqrt(xDis * xDis + yDis * yDis));
-                            citiesWeightMat.Add(distance);
+                            citiesDistanceMat.Add(distance);
                         }
                     }
                 }
@@ -66,14 +75,14 @@ namespace tsp_sa
         {
             if (i > j)
             {
-                return citiesNum * j + i - (j + 1) * j / 2 - j - 1;
+                return CitiesNum * j + i - (j + 1) * j / 2 - j - 1;
             }
-            return citiesNum * i + j - (i + 1) * i / 2 - i - 1;
+            return CitiesNum * i + j - (i + 1) * i / 2 - i - 1;
         }
 
-        public int GetEdgeWeight(int i, int j)
+        public int GetDistance(int i, int j)
         {
-            return (int)citiesWeightMat[GetIndex(i,j)];
+            return (int)citiesDistanceMat[GetIndex(i,j)];
         }
     }
 }
