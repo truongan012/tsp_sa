@@ -3,18 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static System.Console;
 
 namespace tsp_sa
 {
-    class Program
+    class SA
     {
-        static void Main(string[] args)
+        public static void Execute()
         {
-            TSP tsp = new TSP();
-            tsp.ReadCities();
-
-            ReadKey();
 
         }
     }
