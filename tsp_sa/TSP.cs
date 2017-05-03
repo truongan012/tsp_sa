@@ -82,7 +82,8 @@ namespace tsp_sa
 
         public int GetDistance(int i, int j)
         {
-            return (int)citiesDistanceMat[GetIndex(i,j)];
+            int index = GetIndex(i, j);
+            return (int)citiesDistanceMat[index];
         }
     }
 }

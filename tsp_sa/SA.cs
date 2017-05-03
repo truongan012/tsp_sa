@@ -10,8 +10,8 @@ namespace tsp_sa
 {
     class SA
     {
-        private const double FinalTemperature = 0.000001f;
-        private const double ReductionFactor = 0.99f;
+        private const double FinalTemperature = 0.1;
+        private const double ReductionFactor = 0.8;
 
         TSP tsp;
         private int maxSwaps;
@@ -23,7 +23,7 @@ namespace tsp_sa
         public SA(TSP temp)
         {
             tsp = temp;
-            maxSwaps = temp.CitiesNum * 10;
+            maxSwaps = temp.CitiesNum * 5;
             maxInterations = temp.CitiesNum * 10;
             path = new int[temp.CitiesNum];
             finalPath = new int[temp.CitiesNum];
@@ -33,7 +33,10 @@ namespace tsp_sa
         {
             double temperature = InitialTemperature();
             Display(path);
-            int bestCost = GetCost(path);
+
+            path.CopyTo(finalPath, 0);
+            int bestCost = GetCost(finalPath);
+
             do
             {
                 for (int i = 0; i < maxSwaps; i++)
@@ -53,7 +56,9 @@ namespace tsp_sa
                     }
                 }
                 temperature = ReductionFactor * temperature;
-            } while (temperature < FinalTemperature);
+            } while (temperature - FinalTemperature > 0);
+
+            Display(path);
             Display(finalPath);
         }
 
@@ -61,17 +66,14 @@ namespace tsp_sa
         {
             return (tsp.GetDistance(nodeA, nodeB) + tsp.GetDistance(nodeA + 1, nodeB + 1)
               - tsp.GetDistance(nodeA, nodeA + 1) + tsp.GetDistance(nodeB, nodeB + 1));
-
         }
 
         private void RandomNodes(out int nodeA, out int nodeB)
         {
-            nodeA = (int)(0.5f + new Random().NextDouble() * (tsp.CitiesNum - 1));
-            nodeA = nodeA < tsp.CitiesNum - 1 ? nodeA : nodeA - 1;
+            nodeA = new Random().Next(0, tsp.CitiesNum - 1);
             do
             {
-                nodeB = (int)(0.5f + new Random().NextDouble() * (tsp.CitiesNum - 1));
-                nodeB = nodeB < tsp.CitiesNum - 1 ? nodeB : nodeB - 1;
+                nodeB = new Random().Next(0, tsp.CitiesNum - 1);
             } while ((nodeA - nodeB + tsp.CitiesNum) % tsp.CitiesNum < 2);
         }
 
@@ -83,18 +85,36 @@ namespace tsp_sa
 
         private void InitialSolution()
         {
-            //for (int i = 0; i < tsp.CitiesNum; i++)
-            //{
-            //    path[i] = i;
-            //    int bestDistance = tsp.GetDistance(i, i + 1);
-            //    for (int j = i + 1; j < tsp.CitiesNum; j++)
-            //    {
-            //        if (tsp.GetDistance(i, j) < bestDistance)
-            //        {
-            //            bestDistance = tsp.GetDistance(i, j);
-            //        }
-            //    }
-            //}
+            bool[] visiedNodes = new bool[tsp.CitiesNum];
+            for (int i = 0; i < visiedNodes.Length; i++)
+            {
+                visiedNodes[i] = false;
+            }
+
+            int k = 0;
+            int node = new Random().Next(0, tsp.CitiesNum);
+            while (k < tsp.CitiesNum)
+            {
+                int j = 0;
+                int nodeTrace = node;
+                path[k] = node;
+                visiedNodes[node] = true;
+
+                int bestCost = Int32.MaxValue;
+                while (j < tsp.CitiesNum)
+                {
+                    if (!visiedNodes[j] && j != node)
+                    {
+                        if (tsp.GetDistance(node, j) < bestCost)
+                        {
+                            bestCost = tsp.GetDistance(node, j);
+                            node = j;
+                        }
+                    }
+                    j++;
+                }
+                k++;
+            }
         }
 
         private void Swap(int nodeA, int nodeB)
@@ -118,7 +138,7 @@ namespace tsp_sa
 
         private bool Oracle(double energyDifference, double temperature)
         {
-            return (energyDifference < 0) || (new Random().NextDouble() < Math.Exp(-energyDifference / temperature));
+            return (energyDifference < 0) || ((new Random().NextDouble() - Math.Exp(-energyDifference / temperature)) < 0);
         }
 
         public void Display(int[] path)
