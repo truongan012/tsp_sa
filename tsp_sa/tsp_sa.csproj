@@ -50,9 +50,11 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="Lib\eil51.opt.tour" />
+    <None Include="Lib\d2103.tsp" />
     <None Include="Lib\eil51.tsp" />
     <None Include="Lib\eil8.tsp" />
+    <None Include="Lib\lin105.tsp" />
+    <None Include="Lib\pcb442.tsp" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
