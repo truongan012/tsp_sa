@@ -1,9 +1,4 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using static System.Console;
 
 namespace tsp_sa
@@ -11,7 +6,8 @@ namespace tsp_sa
     class SA
     {
         private const double FinalTemperature = 0.0001;
-        private const double ReductionFactor = 0.8;
+        private const double ReductionFactor = 0.9;
+        private const double TemperaturePercent = 10;
 
         TSP tsp;
         private int maxSwaps;
@@ -29,9 +25,11 @@ namespace tsp_sa
             finalPath = new int[temp.CitiesNum];
         }
 
-        public void Execute()
+        public void Execute(double tempPercent = TemperaturePercent, double finalTemp = FinalTemperature, double reduceFactor = ReductionFactor)
         {
-            double temperature = InitialTemperature();
+            //WriteLine($"p: {tempPercent}     f:{finalTemp}     r:{reduceFactor}");
+
+            double temperature = InitialTemperature(tempPercent);
             Display(path);
 
             path.CopyTo(finalPath, 0);
@@ -55,15 +53,14 @@ namespace tsp_sa
                         {
                             path.CopyTo(finalPath, 0);
                             bestCost = cost;
-                        }
-                        if (interation > maxInterations)
-                        {
-                            break;
+                            interation--;
                         }
                     }
                 }
-                temperature = ReductionFactor * temperature;
-            } while (temperature > FinalTemperature);
+                if (interation > maxInterations) break;
+
+                temperature = reduceFactor * temperature;
+            } while (temperature > finalTemp);
 
             Display(path);
             Display(finalPath);
@@ -71,50 +68,56 @@ namespace tsp_sa
 
         private double CalcEnergyDifference(int nodeA, int nodeB)
         {
-            return (tsp.GetDistance(nodeA, nodeB) + tsp.GetDistance(nodeA + 1, nodeB + 1)
-              - tsp.GetDistance(nodeA, nodeA + 1) + tsp.GetDistance(nodeB, nodeB + 1));
+            int neighborNodeA = nodeA < tsp.CitiesNum - 1 ? nodeA + 1 : 0;
+            int neighborNodeB = nodeB < tsp.CitiesNum - 1 ? nodeB + 1 : 0;
+            return (tsp.GetDistance(nodeA, nodeB) + tsp.GetDistance(neighborNodeA, neighborNodeB)
+              - tsp.GetDistance(nodeA, neighborNodeA) + tsp.GetDistance(nodeB, neighborNodeB));
         }
 
         private void RandomNodes(out int nodeA, out int nodeB)
         {
-            nodeA = new Random().Next(0, tsp.CitiesNum - 1);
+            nodeA = new Random().Next(0, tsp.CitiesNum);
             do
             {
-                nodeB = new Random().Next(0, tsp.CitiesNum - 1);
+                nodeB = new Random().Next(0, tsp.CitiesNum);
             } while ((nodeA - nodeB + tsp.CitiesNum) % tsp.CitiesNum < 2);
         }
 
-        private double InitialTemperature()
+        private double InitialTemperature(double p)
         {
             InitialSolution();
-            return GetCost(path) / 20;
+            return GetCost(path) * p / 100;
         }
 
         private void InitialSolution()
         {
+            //Initial unvisited nodes list
             bool[] visiedNodes = new bool[tsp.CitiesNum];
             for (int i = 0; i < visiedNodes.Length; i++)
             {
                 visiedNodes[i] = false;
             }
 
-            int k = 0;
+            //random start node
             int node = new Random().Next(0, tsp.CitiesNum);
+
+            //find the nearest neighbor and add to path
+            //loop till full path is completed
+            int k = 0;
             while (k < tsp.CitiesNum)
             {
                 int j = 0;
-                int nodeTrace = node;
                 path[k] = node;
                 visiedNodes[node] = true;
 
-                int bestCost = Int32.MaxValue;
+                int bestDistance = Int32.MaxValue;
                 while (j < tsp.CitiesNum)
                 {
                     if (!visiedNodes[j] && j != node)
                     {
-                        if (tsp.GetDistance(node, j) < bestCost)
+                        if (tsp.GetDistance(node, j) < bestDistance)
                         {
-                            bestCost = tsp.GetDistance(node, j);
+                            bestDistance = tsp.GetDistance(node, j);
                             node = j;
                         }
                     }
@@ -145,7 +148,9 @@ namespace tsp_sa
 
         private bool Oracle(double energyDifference, double temperature)
         {
-            return (energyDifference < 0) || (new Random().NextDouble() < Math.Exp(-energyDifference / temperature));
+            double probability = Math.Exp(-energyDifference / temperature);
+            double rand = new Random().NextDouble();
+            return (energyDifference < 0) || (rand < probability);
         }
 
         public void Display(int[] path)
