@@ -10,7 +10,7 @@ namespace tsp_sa
 {
     class SA
     {
-        private const double FinalTemperature = 0.1;
+        private const double FinalTemperature = 0.0001;
         private const double ReductionFactor = 0.8;
 
         TSP tsp;
@@ -23,7 +23,7 @@ namespace tsp_sa
         public SA(TSP temp)
         {
             tsp = temp;
-            maxSwaps = temp.CitiesNum * 5;
+            maxSwaps = temp.CitiesNum * 100;
             maxInterations = temp.CitiesNum * 10;
             path = new int[temp.CitiesNum];
             finalPath = new int[temp.CitiesNum];
@@ -39,6 +39,7 @@ namespace tsp_sa
 
             do
             {
+                int interation = 0;
                 for (int i = 0; i < maxSwaps; i++)
                 {
                     int nodeA, nodeB;
@@ -48,15 +49,21 @@ namespace tsp_sa
                     if (Oracle(energyDifference, temperature))
                     {
                         Swap(nodeA, nodeB);
-                        if (GetCost(path) < bestCost)
+                        interation++;
+                        int cost = GetCost(path);
+                        if (cost < bestCost)
                         {
                             path.CopyTo(finalPath, 0);
-                            bestCost = GetCost(finalPath);
+                            bestCost = cost;
+                        }
+                        if (interation > maxInterations)
+                        {
+                            break;
                         }
                     }
                 }
                 temperature = ReductionFactor * temperature;
-            } while (temperature - FinalTemperature > 0);
+            } while (temperature > FinalTemperature);
 
             Display(path);
             Display(finalPath);
@@ -138,7 +145,7 @@ namespace tsp_sa
 
         private bool Oracle(double energyDifference, double temperature)
         {
-            return (energyDifference < 0) || ((new Random().NextDouble() - Math.Exp(-energyDifference / temperature)) < 0);
+            return (energyDifference < 0) || (new Random().NextDouble() < Math.Exp(-energyDifference / temperature));
         }
 
         public void Display(int[] path)

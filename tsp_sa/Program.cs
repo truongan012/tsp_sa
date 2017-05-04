@@ -11,14 +11,16 @@ namespace tsp_sa
     {
         static void Main(string[] args)
         {
-            TSP tsp = new TSP();
-            tsp.GetCitiesInfo();
+            if (args.Length == 1)
+            {
+                TSP tsp = new TSP();
+                tsp.GetCitiesInfo(args[0]);
 
-            SA sa = new SA(tsp);
-            sa.Execute();
+                SA sa = new SA(tsp);
+                sa.Execute();
 
-            ReadKey();
-
+                ReadKey();
+            }
         }
     }
 }

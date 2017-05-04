@@ -23,11 +23,11 @@ namespace tsp_sa
 
         }
 
-        public void GetCitiesInfo()
+        public void GetCitiesInfo(string args)
         {
             try
             {
-                using (StreamReader sr = new StreamReader("..\\..\\Lib\\eil51.tsp"))
+                using (StreamReader sr = new StreamReader(args))
                 {
                     //Get the number of the cities
                     string line;
