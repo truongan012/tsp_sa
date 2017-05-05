@@ -74,7 +74,7 @@ namespace tsp_sa
                 }
                 else
                 {
-                    if (interation > maxInterations/2) break;
+                    if (interation > maxInterations) break;
                     temperature = reduceFactor * temperature;
                 }
             } while (temperature > finalTemp);
