@@ -31,8 +31,6 @@ namespace tsp_sa
                 tsp.GetCitiesInfo(fileName);
                 RunSA(tsp, p, f, r);
             }
-            ReadKey();
-
         }
 
         private static void ShowHelp()
