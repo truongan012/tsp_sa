@@ -6,7 +6,7 @@ namespace tsp_sa
     class SA
     {
         private const double FinalTemperature = 0.0001;
-        private const double ReductionFactor = 0.9;
+        private const double ReductionFactor = 0.98;
         private const double TemperaturePercent = 10;
 
         TSP tsp;
@@ -30,6 +30,7 @@ namespace tsp_sa
             //WriteLine($"p: {tempPercent}     f:{finalTemp}     r:{reduceFactor}");
 
             double temperature = InitialTemperature(tempPercent);
+            double initialTemp = temperature;
             Display(path);
 
             path.CopyTo(finalPath, 0);
@@ -38,6 +39,7 @@ namespace tsp_sa
             do
             {
                 int interation = 0;
+                finalPath.CopyTo(path, 0);
                 for (int i = 0; i < maxSwaps; i++)
                 {
                     int nodeA, nodeB;
@@ -53,13 +55,28 @@ namespace tsp_sa
                         {
                             path.CopyTo(finalPath, 0);
                             bestCost = cost;
-                            interation--;
                         }
                     }
+                    if (interation > maxInterations) break;
                 }
-                if (interation > maxInterations) break;
 
-                temperature = reduceFactor * temperature;
+                if (temperature > 3 * initialTemp / 4)
+                {
+                    temperature = reduceFactor * temperature * 0.85;
+                }
+                else if (temperature > initialTemp / 2)
+                {
+                    temperature = reduceFactor * temperature * 0.9;
+                }
+                else if (temperature > initialTemp / 4)
+                {
+                    temperature = reduceFactor * temperature * 0.95;
+                }
+                else
+                {
+                    if (interation > maxInterations/2) break;
+                    temperature = reduceFactor * temperature;
+                }
             } while (temperature > finalTemp);
 
             Display(path);
