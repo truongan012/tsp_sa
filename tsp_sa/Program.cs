@@ -16,20 +16,20 @@ namespace tsp_sa
             else
             {
                 string fileName = args[0];
-                double? p = null;
+                double? t = null;
                 double? f = null;
                 double? r = null;
 
                 for (int i = 1; i < args.Length; i++)
                 {
-                    if (args[i].Equals("-p")) p = Double.Parse(args[i + 1]);
+                    if (args[i].Equals("-t")) t = Double.Parse(args[i + 1]);
                     if (args[i].Equals("-f")) f = Double.Parse(args[i + 1]);
                     if (args[i].Equals("-r")) r = Double.Parse(args[i + 1]);
                 }
 
                 TSP tsp = new TSP();
                 tsp.GetCitiesInfo(fileName);
-                RunSA(tsp, p, f, r);
+                RunSA(tsp, t, f, r);
             }
             ReadKey();
         }
@@ -50,7 +50,7 @@ namespace tsp_sa
             WriteLine("For Example: eli51.tsp -p 10 -f 0.001 -r 0.99");
         }
 
-        private static void RunSA(TSP tsp, double? p, double? f, double? r, bool test = true)
+        private static void RunSA(TSP tsp, double? t, double? f, double? r, bool test = true)
         {
             SA sa = new SA(tsp);
             Stopwatch stopWatch = new Stopwatch();
@@ -60,14 +60,14 @@ namespace tsp_sa
                 stopWatch.Start();
             }
 
-            if (p == null && f == null && r == null) sa.Execute();
-            else if (p == null && f == null && r != null) sa.Execute(coolingRate: r.Value);
-            else if (p == null && f != null && r == null) sa.Execute(finalTemp: f.Value);
-            else if (p != null && f == null && r == null) sa.Execute(tempPercent: p.Value);
-            else if (p != null && f != null && r == null) sa.Execute(tempPercent: p.Value, finalTemp: f.Value);
-            else if (p == null && f != null && r != null) sa.Execute(finalTemp: f.Value, coolingRate: r.Value);
-            else if (p != null && f == null && r != null) sa.Execute(tempPercent: p.Value, coolingRate: r.Value);
-            else sa.Execute(p.Value, f.Value, r.Value);
+            if (t == null && f == null && r == null) sa.Execute();
+            else if (t == null && f == null && r != null) sa.Execute(coolingRate: r.Value);
+            else if (t == null && f != null && r == null) sa.Execute(finalTemp: f.Value);
+            else if (t != null && f == null && r == null) sa.Execute(tempPercent: t.Value);
+            else if (t != null && f != null && r == null) sa.Execute(tempPercent: t.Value, finalTemp: f.Value);
+            else if (t == null && f != null && r != null) sa.Execute(finalTemp: f.Value, coolingRate: r.Value);
+            else if (t != null && f == null && r != null) sa.Execute(tempPercent: t.Value, coolingRate: r.Value);
+            else sa.Execute(t.Value, f.Value, r.Value);
 
             if (test)
             {

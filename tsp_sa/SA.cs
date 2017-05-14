@@ -30,7 +30,6 @@ namespace tsp_sa
             //WriteLine($"p: {tempPercent}     f:{finalTemp}     r:{coolingRate}");
 
             double temperature = InitialTemperature(tempPercent);
-            double initialTemp = temperature;
             Display(path);
 
             path.CopyTo(finalPath, 0);
@@ -39,7 +38,7 @@ namespace tsp_sa
 
             do
             {
-                int iteration = 0;
+                //int iteration = 0;
                 finalPath.CopyTo(path, 0);
                 for (int i = 0; i < maxSwaps; i++)
                 {
@@ -50,7 +49,7 @@ namespace tsp_sa
                     if (Oracle(energyDifference, temperature))
                     {
                         Swap(nodeA, nodeB);
-                        iteration++;
+                        //iteration++;
                         int cost = GetCost(path);
                         if (cost < bestCost)
                         {
@@ -58,7 +57,7 @@ namespace tsp_sa
                             bestCost = cost;
                         }
                     }
-                    if (iteration > maxIteration) break;
+                    //if (iteration > maxIteration) break;
                 }
 
                 temperature *= coolingRate;
@@ -66,7 +65,7 @@ namespace tsp_sa
                 iterationTemp++;
             } while (temperature > finalTemp);
 
-            Display(path);
+            //Display(path);
             Display(finalPath);
             WriteLine($"Loop: {iterationTemp}");
         }
@@ -155,8 +154,6 @@ namespace tsp_sa
 
         public void Display(int[] path)
         {
-            WriteLine($"Total Cost: {GetCost(path)} ");
-
             for (int i = 0; i < path.Length; i++)
             {
                 if (i == path.Length - 1)
@@ -168,6 +165,7 @@ namespace tsp_sa
                     Write($"{path[i] + 1} -> ");
                 }
             }
+            WriteLine($"Total Cost: {GetCost(path)} ");
         }
 
         public int GetCost(int[] path)
