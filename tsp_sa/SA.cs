@@ -104,7 +104,7 @@ namespace tsp_sa
             }
 
             //random start node
-            int node = 0;// rand.Next(0, tsp.CitiesNum);
+            int node = rand.Next(0, tsp.CitiesNum);
 
             //find the nearest neighbor and add to path
             //loop till full path is completed
