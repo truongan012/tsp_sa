@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Threading;
 using System.Windows.Forms;
-using System.ComponentModel;
-using System.Drawing;
-using System.Data;
-using System.Text;
+using Microsoft.Msagl.GraphViewerGdi;
+using Microsoft.Msagl.Drawing;
+using Microsoft.Msagl;
 using static System.Console;
 
 namespace tsp_sa
@@ -21,25 +19,25 @@ namespace tsp_sa
             }
             else
             {
-                //string fileName = args[0];
-                //double? t = null;
-                //double? f = null;
-                //double? r = null;
+                string fileName = args[0];
+                double? t = null;
+                double? f = null;
+                double? r = null;
 
-                //for (int i = 1; i < args.Length; i++)
-                //{
-                //    if (args[i].Equals("-t")) t = Double.Parse(args[i + 1]);
-                //    if (args[i].Equals("-f")) f = Double.Parse(args[i + 1]);
-                //    if (args[i].Equals("-r")) r = Double.Parse(args[i + 1]);
-                //}
+                for (int i = 1; i < args.Length; i++)
+                {
+                    if (args[i].Equals("-t")) t = Double.Parse(args[i + 1]);
+                    if (args[i].Equals("-f")) f = Double.Parse(args[i + 1]);
+                    if (args[i].Equals("-r")) r = Double.Parse(args[i + 1]);
+                }
 
-                //TSP tsp = new TSP();
-                //tsp.GetCitiesInfo(fileName);
+                TSP tsp = new TSP();
+                tsp.GetCitiesInfo(fileName);
 
-                //SA sa = new SA(tsp);
-                //Run(sa, t, f, r);
+                SA sa = new SA(tsp);
+                Run(sa, t, f, r);
 
-                DrawGraph();
+                DrawGraph(sa.FinalPath);
 
             }
             ReadKey();
@@ -88,10 +86,46 @@ namespace tsp_sa
             }
         }
 
-        private static void DrawGraph()
+        private static void DrawGraph(int[] path)
         {
-            GraphGUI fd = new GraphGUI();
-            Application.Run(fd);
+            //create a form 
+            Form form = new Form();
+
+            //create a viewer object 
+            GViewer viewer = new GViewer();
+
+            //create a graph object 
+            Graph graph = new Graph("graph");
+            graph.LayoutAlgorithmSettings = new Microsoft.Msagl.Layout.MDS.MdsLayoutSettings();
+            graph.Directed = false;
+
+            //create the graph content 
+            for (int i = 0; i < path.Length; i++)
+            {
+                graph.AddNode(i.ToString());
+            }
+
+            for (int i = 0; i < path.Length; i++)
+            {
+                for (int j = i + 1; j < path.Length; j++)
+                {
+                    graph.AddEdge(i.ToString(), j.ToString());
+                    
+                }
+            }
+
+            //bind the graph to the viewer 
+            viewer.Graph = graph;
+
+            //associate the viewer with the form 
+            form.SuspendLayout();
+            viewer.Dock = System.Windows.Forms.DockStyle.Fill;
+            
+            form.Controls.Add(viewer);
+            form.ResumeLayout();
+
+            //show the form 
+            form.ShowDialog();
         }
     }
 }
