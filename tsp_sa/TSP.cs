@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using static System.Console;
 
@@ -9,6 +10,7 @@ namespace tsp_sa
     {
         int citiesNum;
         ArrayList citiesDistanceMat = new ArrayList();
+        List<int> bestTour = new List<int>();
 
         public int CitiesNum
         {
@@ -17,6 +19,14 @@ namespace tsp_sa
                 return citiesNum;
             }
 
+        }
+
+        public List<int> BestTour
+        {
+            get
+            {
+                return bestTour;
+            }
         }
 
         public void GetCitiesInfo(string args)
@@ -80,6 +90,27 @@ namespace tsp_sa
         {
             int index = GetIndex(i, j);
             return (int)citiesDistanceMat[index];
+        }
+
+        public void GetBestTourInfo(string fileName)
+        {
+            try
+            {
+                using (StreamReader sr = new StreamReader(fileName))
+                {
+                    string line;
+                    while (!(line = sr.ReadLine()).Equals("TOUR_SECTION")) ;
+                    while (!(line = sr.ReadLine()).Equals("-1"))
+                    {
+                        int value = Convert.ToInt32(line.Trim()) - 1;
+                        bestTour.Add(value);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                WriteLine(e.Message);
+            }
         }
     }
 }

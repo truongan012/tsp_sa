@@ -31,22 +31,23 @@ namespace tsp_sa
                 tsp.GetCitiesInfo(fileName);
                 RunSA(tsp, p, f, r);
             }
+            ReadKey();
         }
 
         private static void ShowHelp()
         {
-            Console.WriteLine("Traveling Salesman Problem solver with Simulated Annealing algorithm");
-            Console.WriteLine();
-            Console.WriteLine("Syntax:    [FileName] [Options]");
-            Console.WriteLine();
-            Console.WriteLine("[File Name] \t: File name path, file format as TSPLIB95, egde weigh is EUC_2D");
-            Console.WriteLine();
-            Console.WriteLine("Options:");
-            Console.WriteLine("    -p \t: Percentage of intial solution cost (intial temperature)");
-            Console.WriteLine("    -f \t: Final temperature that will stop program");
-            Console.WriteLine("    -r \t: Temperature reduction factor");
-            Console.WriteLine();
-            Console.WriteLine("For Example: eli51.tsp -p 10 -f 0.001 -r 0.99");
+            WriteLine("Traveling Salesman Problem solver with Simulated Annealing algorithm");
+            WriteLine();
+            WriteLine("Syntax:    [FileName] [Options]");
+            WriteLine();
+            WriteLine("[File Name] \t: File name path, file format as TSPLIB95, egde weigh is EUC_2D");
+            WriteLine();
+            WriteLine("Options:");
+            WriteLine("    -p \t: Percentage of intial solution cost (intial temperature)");
+            WriteLine("    -f \t: Final temperature that will stop program");
+            WriteLine("    -r \t: Temperature reduction factor");
+            WriteLine();
+            WriteLine("For Example: eli51.tsp -p 10 -f 0.001 -r 0.99");
         }
 
         private static void RunSA(TSP tsp, double? p, double? f, double? r, bool test = true)
@@ -60,12 +61,12 @@ namespace tsp_sa
             }
 
             if (p == null && f == null && r == null) sa.Execute();
-            else if (p == null && f == null && r != null) sa.Execute(reduceFactor: r.Value);
+            else if (p == null && f == null && r != null) sa.Execute(coolingRate: r.Value);
             else if (p == null && f != null && r == null) sa.Execute(finalTemp: f.Value);
             else if (p != null && f == null && r == null) sa.Execute(tempPercent: p.Value);
             else if (p != null && f != null && r == null) sa.Execute(tempPercent: p.Value, finalTemp: f.Value);
-            else if (p == null && f != null && r != null) sa.Execute(finalTemp: f.Value, reduceFactor: r.Value);
-            else if (p != null && f == null && r != null) sa.Execute(tempPercent: p.Value, reduceFactor: r.Value);
+            else if (p == null && f != null && r != null) sa.Execute(finalTemp: f.Value, coolingRate: r.Value);
+            else if (p != null && f == null && r != null) sa.Execute(tempPercent: p.Value, coolingRate: r.Value);
             else sa.Execute(p.Value, f.Value, r.Value);
 
             if (test)
