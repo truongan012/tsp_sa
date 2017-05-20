@@ -33,11 +33,13 @@ namespace tsp_sa
 
                 TSP tsp = new TSP();
                 tsp.GetCitiesInfo(fileName);
+                tsp.GetBestTourInfo(@"..\..\Lib\eil51.opt.tour");
 
                 SA sa = new SA(tsp);
-                Run(sa, t, f, r);
+                sa.DisPlayBestTour();
+                //Run(sa, t, f, r);
 
-                DrawGraph(sa.FinalPath);
+                //DrawGraph(sa.FinalPath);
 
             }
             ReadKey();
@@ -110,7 +112,6 @@ namespace tsp_sa
                 for (int j = i + 1; j < path.Length; j++)
                 {
                     graph.AddEdge(i.ToString(), j.ToString());
-                    
                 }
             }
 
