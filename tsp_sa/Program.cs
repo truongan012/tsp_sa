@@ -1,18 +1,12 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Threading;
-using System.Windows.Forms;
-using System.ComponentModel;
-using System.Drawing;
-using System.Data;
-using System.Text;
 using static System.Console;
 
 namespace tsp_sa
 {
     class Program
     {
-        [STAThread]
         static void Main(string[] args)
         {
             if (args.Length == 0 || args[0].Equals("-help") || args[0].Equals("-h"))
@@ -21,26 +15,21 @@ namespace tsp_sa
             }
             else
             {
-                //string fileName = args[0];
-                //double? t = null;
-                //double? f = null;
-                //double? r = null;
+                string fileName = args[0];
+                double? t = null;
+                double? f = null;
+                double? r = null;
 
-                //for (int i = 1; i < args.Length; i++)
-                //{
-                //    if (args[i].Equals("-t")) t = Double.Parse(args[i + 1]);
-                //    if (args[i].Equals("-f")) f = Double.Parse(args[i + 1]);
-                //    if (args[i].Equals("-r")) r = Double.Parse(args[i + 1]);
-                //}
+                for (int i = 1; i < args.Length; i++)
+                {
+                    if (args[i].Equals("-t")) t = Double.Parse(args[i + 1]);
+                    if (args[i].Equals("-f")) f = Double.Parse(args[i + 1]);
+                    if (args[i].Equals("-r")) r = Double.Parse(args[i + 1]);
+                }
 
-                //TSP tsp = new TSP();
-                //tsp.GetCitiesInfo(fileName);
-
-                //SA sa = new SA(tsp);
-                //Run(sa, t, f, r);
-
-                DrawGraph();
-
+                TSP tsp = new TSP();
+                tsp.GetCitiesInfo(fileName);
+                RunSA(tsp, t, f, r);
             }
             ReadKey();
         }
@@ -61,8 +50,9 @@ namespace tsp_sa
             WriteLine("For Example: eli51.tsp -p 10 -f 0.001 -r 0.99");
         }
 
-        private static void Run(SA sa, double? t, double? f, double? r, bool test = true)
+        private static void RunSA(TSP tsp, double? t, double? f, double? r, bool test = true)
         {
+            SA sa = new SA(tsp);
             Stopwatch stopWatch = new Stopwatch();
 
             if (test)
@@ -86,12 +76,6 @@ namespace tsp_sa
                 TimeSpan ts = stopWatch.Elapsed;
                 Console.WriteLine($"RunTime {ts.Hours:00}:{ts.Minutes:00}:{ts.Seconds:00}");
             }
-        }
-
-        private static void DrawGraph()
-        {
-            GraphGUI fd = new GraphGUI();
-            Application.Run(fd);
         }
     }
 }

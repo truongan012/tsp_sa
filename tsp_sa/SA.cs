@@ -16,14 +16,6 @@ namespace tsp_sa
         private int[] finalPath;
         Random rand = new Random();
 
-        public int[] FinalPath
-        {
-            get
-            {
-                return finalPath;
-            }
-        }
-
         public SA(TSP temp)
         {
             tsp = temp;
