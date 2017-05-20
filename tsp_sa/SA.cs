@@ -38,6 +38,7 @@ namespace tsp_sa
             //WriteLine($"p: {tempPercent}     f:{finalTemp}     r:{coolingRate}");
 
             double temperature = InitialTemperature(tempPercent);
+            WriteLine("Initial Path:");
             Display(path);
 
             path.CopyTo(finalPath, 0);
@@ -74,8 +75,9 @@ namespace tsp_sa
             } while (temperature > finalTemp);
 
             //Display(path);
+            WriteLine("Final Path:");
             Display(finalPath);
-            WriteLine($"Loop: {iterationTemp}");
+            WriteLine($"Loop Counter: {iterationTemp}");
         }
 
         private double CalcEnergyDifference(int nodeA, int nodeB)
@@ -162,7 +164,7 @@ namespace tsp_sa
 
         public void Display(int[] path)
         {
-            Write($"(");
+            Write("(");
             for (int i = 0; i < path.Length - 1; i++)
             {
                 Write($"{path[i] + 1}, ");

@@ -33,11 +33,11 @@ namespace tsp_sa
 
                 TSP tsp = new TSP();
                 tsp.GetCitiesInfo(fileName);
-                tsp.GetBestTourInfo(@"..\..\Lib\eil51.opt.tour");
+                //tsp.GetBestTourInfo(@"..\..\Lib\eil51.opt.tour");
 
                 SA sa = new SA(tsp);
-                sa.DisPlayBestTour();
-                //Run(sa, t, f, r);
+                //sa.DisPlayBestTour();
+                Run(sa, t, f, r);
 
                 //DrawGraph(sa.FinalPath);
 
@@ -121,7 +121,7 @@ namespace tsp_sa
             //associate the viewer with the form 
             form.SuspendLayout();
             viewer.Dock = System.Windows.Forms.DockStyle.Fill;
-            
+
             form.Controls.Add(viewer);
             form.ResumeLayout();
 
