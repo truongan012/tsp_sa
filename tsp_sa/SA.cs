@@ -30,6 +30,7 @@ namespace tsp_sa
             //WriteLine($"p: {tempPercent}     f:{finalTemp}     r:{coolingRate}");
 
             double temperature = InitialTemperature(tempPercent);
+            WriteLine("Initial Path:");
             Display(path);
 
             path.CopyTo(finalPath, 0);
@@ -66,8 +67,9 @@ namespace tsp_sa
             } while (temperature > finalTemp);
 
             //Display(path);
+            WriteLine("Final Path:");
             Display(finalPath);
-            WriteLine($"Loop: {iterationTemp}");
+            WriteLine($"Loop Counter: {iterationTemp}");
         }
 
         private double CalcEnergyDifference(int nodeA, int nodeB)
@@ -154,34 +156,23 @@ namespace tsp_sa
 
         public void Display(int[] path)
         {
-            for (int i = 0; i < path.Length; i++)
+            Write("(");
+            for (int i = 0; i < path.Length - 1; i++)
             {
-                if (i == path.Length - 1)
-                {
-                    WriteLine($"{path[i] + 1} -> {path[0] + 1}");
-                }
-                else
-                {
-                    Write($"{path[i] + 1} -> ");
-                }
+                Write($"{path[i] + 1}, ");
             }
+            WriteLine($"{path[path.Length - 1] + 1})");
             WriteLine($"Total Cost: {GetCost(path)} ");
         }
 
         public int GetCost(int[] path)
         {
             int costTotal = 0;
-            for (int i = 0; i < path.Length; i++)
+            for (int i = 0; i < path.Length - 1; i++)
             {
-                if (i == path.Length - 1)
-                {
-                    costTotal += tsp.GetDistance(path[i], path[0]);
-                }
-                else
-                {
-                    costTotal += tsp.GetDistance(path[i], path[i + 1]);
-                }
+                costTotal += tsp.GetDistance(path[i], path[i + 1]);
             }
+            costTotal += tsp.GetDistance(path[path.Length - 1], path[0]);
             return costTotal;
         }
 
@@ -189,6 +180,12 @@ namespace tsp_sa
         {
             int[] tempPath = tsp.BestTour.ToArray();
             return GetCost(tempPath);
+        }
+
+        public void DisPlayBestTour()
+        {
+            int[] tempPath = tsp.BestTour.ToArray();
+            Display(tempPath);
         }
     }
 }

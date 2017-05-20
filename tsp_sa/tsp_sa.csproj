@@ -67,12 +67,14 @@
     <None Include="App.config" />
     <None Include="Lib\eil51.opt.tour" />
     <None Include="Lib\eil51.tsp" />
+    <None Include="Lib\eil8.tsp" />
     <None Include="Lib\lin105.opt.tour" />
     <None Include="Lib\lin105.tsp" />
     <None Include="Lib\pcb442.opt.tour" />
     <None Include="Lib\pcb442.tsp" />
     <None Include="Lib\pr1002.opt.tour" />
     <None Include="Lib\pr1002.tsp" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.5.2">

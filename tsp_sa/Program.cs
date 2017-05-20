@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Threading;
 using static System.Console;
 
 namespace tsp_sa
@@ -29,7 +28,14 @@ namespace tsp_sa
 
                 TSP tsp = new TSP();
                 tsp.GetCitiesInfo(fileName);
-                RunSA(tsp, t, f, r);
+                //tsp.GetBestTourInfo(@"..\..\Lib\eil51.opt.tour");
+
+                SA sa = new SA(tsp);
+                //sa.DisPlayBestTour();
+                Run(sa, t, f, r);
+
+               
+
             }
             ReadKey();
         }
@@ -50,9 +56,8 @@ namespace tsp_sa
             WriteLine("For Example: eli51.tsp -p 10 -f 0.001 -r 0.99");
         }
 
-        private static void RunSA(TSP tsp, double? t, double? f, double? r, bool test = true)
+        private static void Run(SA sa, double? t, double? f, double? r, bool test = true)
         {
-            SA sa = new SA(tsp);
             Stopwatch stopWatch = new Stopwatch();
 
             if (test)
