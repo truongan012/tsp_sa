@@ -50,14 +50,14 @@ namespace tsp_sa
                     double[] xCord = new double[CitiesNum];
                     double[] yCord = new double[CitiesNum];
                     int nodeId = 0;
-                    while (!(line = sr.ReadLine()).Equals("EOF"))
+                    while ((line = sr.ReadLine()) != null && !line.Equals("EOF"))
                     {
                         string[] temp = line.Split(' ');
                         xCord[nodeId] = Convert.ToDouble(temp[1].Trim());
                         yCord[nodeId] = Convert.ToDouble(temp[2].Trim());
                         nodeId++;
                     }
-
+                   
                     //Calculate the distance between each city
                     for (int i = 0; i < CitiesNum; i++)
                     {
