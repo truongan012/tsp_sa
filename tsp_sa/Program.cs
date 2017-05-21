@@ -31,11 +31,8 @@ namespace tsp_sa
                 //tsp.GetBestTourInfo(@"..\..\Lib\eil51.opt.tour");
 
                 SA sa = new SA(tsp);
-                //sa.DisPlayBestTour();
                 Run(sa, t, f, r);
-
-               
-
+                //sa.DisPlayBestTour();
             }
             ReadKey();
         }

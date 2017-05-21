@@ -67,7 +67,7 @@ namespace tsp_sa
             } while (temperature > finalTemp);
 
             //Display(path);
-            WriteLine("Final Path:");
+            WriteLine("\nFinal Path:");
             Display(finalPath);
             WriteLine($"Loop Counter: {iterationTemp}");
         }
@@ -156,12 +156,11 @@ namespace tsp_sa
 
         public void Display(int[] path)
         {
-            Write("(");
             for (int i = 0; i < path.Length - 1; i++)
             {
                 Write($"{path[i] + 1}, ");
             }
-            WriteLine($"{path[path.Length - 1] + 1})");
+            WriteLine($"{path[path.Length - 1] + 1}");
             WriteLine($"Total Cost: {GetCost(path)} ");
         }
 
