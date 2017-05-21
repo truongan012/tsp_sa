@@ -11,7 +11,7 @@ namespace tsp_sa
 
         TSP tsp;
         private int maxSwaps;
-        private int maxIteration;
+        //private int maxIteration;
         private int[] path;
         private int[] finalPath;
         Random rand = new Random();
@@ -20,7 +20,7 @@ namespace tsp_sa
         {
             tsp = temp;
             maxSwaps = temp.CitiesNum * 100;
-            maxIteration = temp.CitiesNum * 10;
+            //maxIteration = temp.CitiesNum * 10;
             path = new int[temp.CitiesNum];
             finalPath = new int[temp.CitiesNum];
         }
@@ -41,7 +41,7 @@ namespace tsp_sa
 
             do
             {
-                int iteration = 0;
+                //int iteration = 0;
                 for (int i = 0; i < maxSwaps; i++)
                 {
                     Random2Pos(out int posA, out int posB);
@@ -56,9 +56,9 @@ namespace tsp_sa
                             path.CopyTo(finalPath, 0);
                             bestCost = cost;
                         }
-                        iteration++;
+                        //iteration++;
                     }
-                    if (iteration > maxIteration) break;
+                    //if (iteration > maxIteration) break;
                 }
                 temperature *= coolingRate;
                 iterationTemp++;
@@ -166,6 +166,7 @@ namespace tsp_sa
             Display(path);
             WriteLine($"Total Cost: {cost} ");
         }
+
         public int GetCost(int[] path)
         {
             int costTotal = 0;
