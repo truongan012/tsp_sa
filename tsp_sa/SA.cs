@@ -30,63 +30,61 @@ namespace tsp_sa
             //WriteLine($"p: {tempPercent}     f:{finalTemp}     r:{coolingRate}");
 
             double temperature = InitialTemperature(tempPercent);
+            int cost = GetCost(path);
             WriteLine("Initial Path:");
-            Display(path);
+            Display(path, cost);
 
             path.CopyTo(finalPath, 0);
-            int bestCost = GetCost(finalPath);
+            int bestCost = cost;
+
             int iterationTemp = 0;
 
             do
             {
-                //int iteration = 0;
-                finalPath.CopyTo(path, 0);
+                int iteration = 0;
                 for (int i = 0; i < maxSwaps; i++)
                 {
-                    int nodeA, nodeB;
-                    RandomNodes(out nodeA, out nodeB);
-                    double energyDifference = CalcEnergyDifference(nodeA, nodeB);
+                    Random2Pos(out int posA, out int posB);
+                    double energyDifference = CalcEngDiffBtwNodesAt(posA, posB);
 
                     if (Oracle(energyDifference, temperature))
                     {
-                        Swap(nodeA, nodeB);
-                        //iteration++;
-                        int cost = GetCost(path);
+                        SwapNodesWithin(posA, posB);
+                        cost = cost + (int)energyDifference;
                         if (cost < bestCost)
                         {
                             path.CopyTo(finalPath, 0);
                             bestCost = cost;
                         }
+                        iteration++;
                     }
-                    //if (iteration > maxIteration) break;
+                    if (iteration > maxIteration) break;
                 }
-
                 temperature *= coolingRate;
-
                 iterationTemp++;
             } while (temperature > finalTemp);
 
-            //Display(path);
+            //Display(path,GetCost(path));
             WriteLine("\nFinal Path:");
-            Display(finalPath);
+            Display(finalPath, bestCost);
             WriteLine($"Loop Counter: {iterationTemp}");
         }
 
-        private double CalcEnergyDifference(int nodeA, int nodeB)
+        private double CalcEngDiffBtwNodesAt(int posA, int posB)
         {
-            int neighborNodeA = nodeA < tsp.CitiesNum - 1 ? nodeA + 1 : 0;
-            int neighborNodeB = nodeB < tsp.CitiesNum - 1 ? nodeB + 1 : 0;
-            return (tsp.GetDistance(nodeA, nodeB) + tsp.GetDistance(neighborNodeA, neighborNodeB)
-              - tsp.GetDistance(nodeA, neighborNodeA) + tsp.GetDistance(nodeB, neighborNodeB));
+            int neighborPosA = posA < tsp.CitiesNum - 1 ? posA + 1 : 0;
+            int neighborPosB = posB < tsp.CitiesNum - 1 ? posB + 1 : 0;
+            return ((tsp.GetDistance(path[posA], path[posB]) + tsp.GetDistance(path[neighborPosA], path[neighborPosB]))
+              - (tsp.GetDistance(path[posA], path[neighborPosA]) + tsp.GetDistance(path[posB], path[neighborPosB])));
         }
 
-        private void RandomNodes(out int nodeA, out int nodeB)
+        private void Random2Pos(out int posA, out int posB)
         {
-            nodeA = rand.Next(0, tsp.CitiesNum);
+            posA = rand.Next(0, tsp.CitiesNum);
             do
             {
-                nodeB = rand.Next(0, tsp.CitiesNum);
-            } while ((nodeA - nodeB + tsp.CitiesNum) % tsp.CitiesNum < 2);
+                posB = rand.Next(0, tsp.CitiesNum);
+            } while ((posA - posB + tsp.CitiesNum) % tsp.CitiesNum < 2);
         }
 
         private double InitialTemperature(double p)
@@ -129,22 +127,22 @@ namespace tsp_sa
             }
         }
 
-        private void Swap(int nodeA, int nodeB)
+        private void SwapNodesWithin(int posA, int posB)
         {
             int tmp;
-            if (nodeA > nodeB)
+            if (posA > posB)
             {
-                tmp = nodeA;
-                nodeA = nodeB;
-                nodeB = tmp;
+                tmp = posA;
+                posA = posB;
+                posB = tmp;
             }
-            while (nodeB > nodeA)
+            while (posB > posA)
             {
-                tmp = path[nodeA + 1];
-                path[nodeA + 1] = path[nodeB];
-                path[nodeB] = tmp;
-                nodeB--;
-                nodeA++;
+                tmp = path[posA + 1];
+                path[posA + 1] = path[posB];
+                path[posB] = tmp;
+                posB--;
+                posA++;
             }
         }
 
@@ -161,9 +159,13 @@ namespace tsp_sa
                 Write($"{path[i] + 1}, ");
             }
             WriteLine($"{path[path.Length - 1] + 1}");
-            WriteLine($"Total Cost: {GetCost(path)} ");
         }
 
+        public void Display(int[] path, int cost)
+        {
+            Display(path);
+            WriteLine($"Total Cost: {cost} ");
+        }
         public int GetCost(int[] path)
         {
             int costTotal = 0;
@@ -175,12 +177,19 @@ namespace tsp_sa
             return costTotal;
         }
 
+        /// <summary>
+        ///  Function for debug
+        /// </summary>
+        /// <returns></returns>
         public int GetBestTour()
         {
             int[] tempPath = tsp.BestTour.ToArray();
             return GetCost(tempPath);
         }
 
+        /// <summary>
+        /// Function for debug
+        /// </summary>
         public void DisPlayBestTour()
         {
             int[] tempPath = tsp.BestTour.ToArray();

@@ -74,6 +74,7 @@
     <None Include="Lib\pcb442.tsp" />
     <None Include="Lib\pr1002.opt.tour" />
     <None Include="Lib\pr1002.tsp" />
+    <None Include="Lib\st70.tsp" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

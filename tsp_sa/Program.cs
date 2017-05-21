@@ -53,14 +53,10 @@ namespace tsp_sa
             WriteLine("For Example: eli51.tsp -p 10 -f 0.001 -r 0.99");
         }
 
-        private static void Run(SA sa, double? t, double? f, double? r, bool test = true)
+        private static void Run(SA sa, double? t, double? f, double? r)
         {
             Stopwatch stopWatch = new Stopwatch();
-
-            if (test)
-            {
-                stopWatch.Start();
-            }
+            stopWatch.Start();
 
             if (t == null && f == null && r == null) sa.Execute();
             else if (t == null && f == null && r != null) sa.Execute(coolingRate: r.Value);
@@ -71,13 +67,11 @@ namespace tsp_sa
             else if (t != null && f == null && r != null) sa.Execute(tempPercent: t.Value, coolingRate: r.Value);
             else sa.Execute(t.Value, f.Value, r.Value);
 
-            if (test)
-            {
-                stopWatch.Stop();
+            stopWatch.Stop();
 
-                TimeSpan ts = stopWatch.Elapsed;
-                Console.WriteLine($"RunTime {ts.Hours:00}:{ts.Minutes:00}:{ts.Seconds:00}");
-            }
+            TimeSpan ts = stopWatch.Elapsed;
+            Console.WriteLine($"Run Time {ts.Hours:00}:{ts.Minutes:00}:{ts.Seconds:00}");
+
         }
     }
 }
