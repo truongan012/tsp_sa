@@ -31,7 +31,9 @@ namespace tsp_sa
 
             double temperature = InitialTemperature(tempPercent);
             int cost = GetCost(path);
+            ForegroundColor = ConsoleColor.Red;
             WriteLine("Initial Path:");
+            ResetColor();
             Display(path, cost);
 
             path.CopyTo(finalPath, 0);
@@ -65,9 +67,11 @@ namespace tsp_sa
             } while (temperature > finalTemp);
 
             //Display(path,GetCost(path));
+            ForegroundColor = ConsoleColor.Red;
             WriteLine("\nFinal Path:");
+            ResetColor();
             Display(finalPath, bestCost);
-            WriteLine($"Loop Counter: {iterationTemp}");
+            WriteLine($"\nLoop Counter: {iterationTemp}");
         }
 
         private double CalcEngDiffBtwNodesAt(int posA, int posB)
@@ -164,7 +168,9 @@ namespace tsp_sa
         public void Display(int[] path, int cost)
         {
             Display(path);
+            ForegroundColor = ConsoleColor.Green;
             WriteLine($"Total Cost: {cost} ");
+            ResetColor();
         }
 
         public int GetCost(int[] path)
