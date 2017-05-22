@@ -1,0 +1,10 @@
+{
+  "version": "0.2.1",
+  "tasks": [
+    {
+      "taskName": "task-tsp_sa",
+      "appliesTo": "tsp_sa/",
+      "type": "command"
+    }
+  ]
+}
