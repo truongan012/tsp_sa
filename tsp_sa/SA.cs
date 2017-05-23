@@ -31,6 +31,7 @@ namespace tsp_sa
 
             double temperature = InitialTemperature(tempPercent);
             int cost = GetCost(path);
+
             ForegroundColor = ConsoleColor.Red;
             WriteLine("Initial Path:");
             ResetColor();
@@ -65,11 +66,14 @@ namespace tsp_sa
                 temperature *= coolingRate;
                 iterationTemp++;
             } while (temperature > finalTemp);
-
-            //Display(path,GetCost(path));
+#if DEBUG
+            Display(path,GetCost(path));
             ForegroundColor = ConsoleColor.Red;
             WriteLine("\nFinal Path:");
             ResetColor();
+#else
+            WriteLine("\nPath:");
+#endif
             Display(finalPath, bestCost);
             WriteLine($"\nLoop Counter: {iterationTemp}");
         }

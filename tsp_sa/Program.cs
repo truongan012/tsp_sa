@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using static System.Console;
 
+
 namespace tsp_sa
 {
     class Program
@@ -34,12 +35,17 @@ namespace tsp_sa
                 Run(sa, t, f, r);
                 //sa.DisPlayBestTour();
             }
+#if DEBUG
+            WriteLine("Press any key for closing...");
             ReadKey();
+#endif
         }
 
         private static void ShowHelp()
         {
+            ForegroundColor = ConsoleColor.Red;
             WriteLine("Traveling Salesman Problem solver with Simulated Annealing algorithm");
+            ResetColor();
             WriteLine();
             WriteLine("Syntax:    [FileName] [Options]");
             WriteLine();
@@ -70,7 +76,7 @@ namespace tsp_sa
             stopWatch.Stop();
 
             TimeSpan ts = stopWatch.Elapsed;
-            Console.WriteLine($"Run Time {ts.Hours:00}:{ts.Minutes:00}:{ts.Seconds:00}");
+            WriteLine($"Run Time {ts.Hours:00}:{ts.Minutes:00}:{ts.Seconds:00}");
 
         }
     }
