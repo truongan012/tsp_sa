@@ -9,4 +9,3 @@ D:\GoogleDrive\Visual Studio\tsp_sa\tsp_sa\bin\Release\tsp_sa.exe
 D:\GoogleDrive\Visual Studio\tsp_sa\tsp_sa\bin\Release\tsp_sa.pdb
 D:\GoogleDrive\Visual Studio\tsp_sa\tsp_sa\obj\Release\tsp_sa.exe
 D:\GoogleDrive\Visual Studio\tsp_sa\tsp_sa\obj\Release\tsp_sa.pdb
-D:\GoogleDrive\Visual Studio\tsp_sa\tsp_sa\obj\Release\tsp_sa.csprojResolveAssemblyReference.cache

@@ -1,11 +1,10 @@
 {
   "ExpandedNodes": [
     "",
-    "\\packages",
     "\\tsp_sa",
     "\\tsp_sa\\Lib",
     "\\tsp_sa\\Properties"
   ],
-  "SelectedNode": "\\tsp_sa\\Program.cs",
+  "SelectedNode": "\\tsp_sa.sln",
   "PreviewInSolutionExplorer": false
 }
